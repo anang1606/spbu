@@ -55,28 +55,13 @@ class UserController extends Controller
 					$listproducts = DB::select("SELECT * FROM products");
 					if( !empty($listproducts)) $dtproducts = 1; else $dtproducts = 0;
 					
-					$listprodwarehouses = DB::select(DB::raw("SELECT * FROM product_warehouse WHERE warehouse_id = :idwarehouse"), array("idwarehouse" =>$user->warehouse_id,));
-					if( !empty($listprodwarehouses)) $dtprodwarehouses = 1; else $dtprodwarehouses = 0;
-					
 					$usercashregister = CashRegister::where('user_id', $user->id)->first();
-					if( !empty($usercashregister) )
-					{
-						$listsales = DB::select(DB::raw("SELECT * FROM sales WHERE cash_register_id = :idcashregister"), array("idcashregister" =>$usercashregister->id,));
-						if( !empty($listsales)) $dtsales = 1; else $dtsales = 0;
+					$listsales = DB::select(DB::raw("SELECT * FROM sales WHERE cash_register_id = :idcashregister"), array("idcashregister" =>$usercashregister->id,));
+					if( !empty($listsales)) $dtsales = 1; else $dtsales = 0;
 						
-						$listproductsales = DB::select(DB::raw("SELECT product_sales.* FROM sales INNER JOIN product_sales ON product_sales.sale_id = sales.id 
-						WHERE sales.cash_register_id = :idcashregister"), array("idcashregister" =>$usercashregister->id,));
-						if( !empty($listproductsales)) $dtsalesproduct = 1; else $dtsalesproduct = 0;	
-					}
-					else
-					{
-						$listsales = DB::select(DB::raw("SELECT * FROM sales WHERE cash_register_id = :idcashregister"), array("idcashregister" =>"0",));
-						if( !empty($listsales)) $dtsales = 1; else $dtsales = 0;
-							
-						$listproductsales = DB::select(DB::raw("SELECT product_sales.* FROM sales INNER JOIN product_sales ON product_sales.sale_id = sales.id 
-						WHERE sales.cash_register_id = :idcashregister"), array("idcashregister" =>"0",));
-						if( !empty($listsalesproduct)) $dtsalesproduct = 1; else $dtsalesproduct = 0;						
-					}
+					$listproductsales = DB::select(DB::raw("SELECT product_sales.* FROM sales INNER JOIN product_sales ON product_sales.sale_id = sales.id 
+					WHERE sales.cash_register_id = :idcashregister"), array("idcashregister" =>$usercashregister->id,));
+					if( !empty($listproductsales)) $dtsalesproduct = 1; else $dtsalesproduct = 0;	
 					
 					$listcustomergroups = DB::select(DB::raw("SELECT * FROM customer_groups WHERE warehouse_id = :idwarehouse"), array("idwarehouse" =>$user->warehouse_id,));
 					if( !empty($listcustomergroups)) $dtcustomergroups = 1; else $dtcustomergroups = 0;
@@ -93,7 +78,6 @@ class UserController extends Controller
 						"dtcashregisters"=>$dtcashregisters,"listcashregisters"=>$listcashregisters,
 						"dtwarehouses"=>$dtwarehouses,"listwarehouses"=>$listwarehouses,						
 						"dtproducts"=>$dtproducts,"listproducts"=>$listproducts,
-						"dtprodwarehouses"=>$dtprodwarehouses,"listprodwarehouses"=>$listprodwarehouses,
 						"dtsales"=>$dtsales,"listsales"=>$listsales,
 						"dtsalesproduct"=>$dtsalesproduct,"listproductsales"=>$listproductsales,						
 						"dtcustomergroups"=>$dtcustomergroups,"listcustomergroups"=>$listcustomergroups,
@@ -189,8 +173,7 @@ class UserController extends Controller
 		else
 			$data = array("status"=>"error","message"=>"Token tidak  terdaftar!","result"=>0);
 			
-		return response()->json($data);
-		
+		return response()->json($data);		
 	}	
 
 	private function udate($format = 'u', $utimestamp = null) 

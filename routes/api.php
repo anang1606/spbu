@@ -24,8 +24,10 @@ Route::get('upgrade','Api\ApiController@upgrade');
 
 Route::post('user/login', 'Api\UserController@login');
 Route::post('user/cekpin', 'Api\UserController@cekpin');
-
+Route::post('customer/cek', 'Api\CustomerController@cekdata');
+Route::post('product/getall', 'Api\ProductController@getall');
+Route::post('product/cekharga', 'Api\ProductController@cekharga');
 Route::post('sales/create', 'Api\SalesController@createsales');
-
+//===========test=============
 Route::post('user/qrcodemake', 'Api\UserController@qrcodemake');
 Route::post('user/qrcoderead', 'Api\UserController@qrcoderead');
