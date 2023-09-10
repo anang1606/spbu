@@ -40,9 +40,23 @@ class CustomerController extends Controller
 				{
 					$listproducts = Product::where(['id' => $idproduk])->get();
 					if( !empty($listproducts) )
-						$data = array("status"=>"OK","message"=>"Produk ada!","listcustomers"=>$listcustomers,"listcustomergroups"=>$listcustomergroups,"listproducts"=>$listproducts,"result"=>1);
+					{
+						if ($listcustomergroups[0]->saldo > $listproducts[0]->price)
+						{
+							$data = array(
+							"status"=>"OK",
+							"message"=>"Produk ada!",
+							"listcustomers"=>$listcustomers,
+							"listcustomergroups"=>$listcustomergroups,
+							"listproducts"=>$listproducts,
+							"result"=>1);							
+						}
+						else
+							$data = array("status"=>"error","message"=>"Saldo ".$listcustomergroups[0]->name." tinggal Rp.".number_format($listcustomergroups[0]->saldo)." ".$listproducts[0]->price,"result"=>0);
+					}
 					else
 						$data = array("status"=>"error","message"=>"Data Produk tidak ada!","result"=>0);
+					
 				}
 				else
 					$data = array("status"=>"error","message"=>"Perusahaan tidak terdafta!","result"=>0);	
