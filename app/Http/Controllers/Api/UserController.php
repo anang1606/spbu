@@ -56,6 +56,7 @@ class UserController extends Controller
 					if( !empty($listproducts)) $dtproducts = 1; else $dtproducts = 0;
 					
 					$usercashregister = CashRegister::where('user_id', $user->id)->first();
+					
 					$listsales = DB::select(DB::raw("SELECT * FROM sales WHERE cash_register_id = :idcashregister"), array("idcashregister" =>$usercashregister->id,));
 					if( !empty($listsales)) $dtsales = 1; else $dtsales = 0;
 						

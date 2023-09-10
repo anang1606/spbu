@@ -18,12 +18,9 @@ use Illuminate\Support\Facades\Storage;
 
 class SalesController extends Controller
 {
-	//=============account API===========================	
-	/* User create_account API */	
-	
-	//api exist user login
-	
-	
+	//=============Sales API===========================	
+	/* User create_sales API */	
+
 	
 	public function createsales(Request $request)
     {
@@ -37,7 +34,12 @@ class SalesController extends Controller
 		$qty = $mydata[5];
 		$unitprice = $mydata[6];
 		$idunitsale = $mydata[7];
-		$total = $mydata[8];		
+		$total = $mydata[8];
+
+		if (str_contains($qty, ','))
+		{
+			$qty = str_replace(",",".",$qty);
+		}
 		
 		$noreference = $idcashregister . '-' . date('Ymd-His');
 		$nosales = "pos" . $noreference;
