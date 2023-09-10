@@ -73,6 +73,8 @@ class UserController extends Controller
 					$listoperator = DB::select("SELECT * FROM users WHERE role_id = 3");
 					if( !empty($listoperator)) $dtoperator = 1; else $dtoperator = 0;
 					
+					$check_login = User::where('email', $username)->update(['is_login'=>1]);
+					
 					$data = array("status"=>"OK",						
 						"message"=>"data Ada","warehous"=>$user->warehouse_id,						
 						"listuser"=>$listuser,
@@ -90,15 +92,36 @@ class UserController extends Controller
 				else				
 					$data = array("status"=>"error","message"=>"FCM Not OK!","result"=>1);
 			}
-			else 
-			{
+			else 			
 				$data = array("status"=>"error","message"=>"Email atau password salah!","result"=>1);				
-			}
 		}		
 		else
             $data = array("status"=>"error","message"=>"Email belum terdaftar!","result"=>0);
 					 
         return response()->json($data);		
+	}
+	
+	public function logoutmesin(Request $request)
+    {
+		$myinput =  $request->input()['data'];
+		$mydata = explode(";", $myinput);
+		$username = $mydata[0];
+		$password = $mydata[1];
+		
+		$user = User::where('email', $username)->first();
+		if( !empty($user) )
+		{
+			if(auth()->attempt(array('email' => $username, 'password' => $password)))
+			{
+				$check_logout = User::where('email', $username)->update(['is_login'=>0]);
+				$data = array("status"=>"OK","message"=>"Logout sukses!","result"=>1);				
+			}
+			else			
+				$data = array("status"=>"error","message"=>"Email atau password salah!","result"=>0);
+		}
+		else
+            $data = array("status"=>"error","message"=>"Email belum terdaftar!","result"=>0);
+		return response()->json($data);		
 	}
 	
 	public function cekpin(Request $request)
@@ -118,6 +141,31 @@ class UserController extends Controller
 		else
             $data = array("status"=>"error","message"=>"Terjadi kesalahan, Hubungi admin!","result"=>0);
 					 
+        return response()->json($data);
+	}
+	
+	public function gantipin(Request $request)
+    {
+		$myinput =  $request->input()['data'];
+		$mydata = explode(";", $myinput);
+		$username = $mydata[0];
+		$password = $mydata[1];
+		$password2 = bcrypt($mydata[2]);	
+		
+		$user = User::where('email', $username)->first();
+		if( !empty($user) )
+		{
+			if(auth()->attempt(array('email' => $username, 'password' => $password)))
+			{
+				$ganti_pin = User::where('email', $username)->update(['password'=>$password2]);
+				$data = array("status"=>"OK","message"=>"Ganti PIN sukses!","result"=>1);
+			}
+			else
+				$data = array("status"=>"error","message"=>"PIN yang anda masukan salah!","result"=>0);
+		}
+		else
+            $data = array("status"=>"error","message"=>"Terjadi kesalahan, Hubungi admin!","result"=>0);
+								 
         return response()->json($data);
 	}	
 

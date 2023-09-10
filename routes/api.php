@@ -23,7 +23,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('upgrade','Api\ApiController@upgrade');
 
 Route::post('user/login', 'Api\UserController@login');
+Route::post('user/logout', 'Api\UserController@logoutmesin');
 Route::post('user/cekpin', 'Api\UserController@cekpin');
+Route::post('user/gantipin', 'Api\UserController@gantipin');
 Route::post('customer/cek', 'Api\CustomerController@cekdata');
 Route::post('product/getall', 'Api\ProductController@getall');
 Route::post('product/cekharga', 'Api\ProductController@cekharga');
